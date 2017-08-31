@@ -31,7 +31,7 @@ Bismark workflow is summarized into three steps as below:
 bismark_genome_preparation [options] <path_to_genome_directory>
 ```
 
-Before aligning the reads, we need indices to C-to-T converted genome and G-to-A converted genome to which the reads will be aligned. Please note that genome directory should contain genome sequence files in FastA format with either .fa or .fasta extension. Internally `bismark_genome_preparation` makes C-to-T converted genome and G-to-A converted genome, and calls `bowtie-build` or `bowtie2-build` to create indices. Finally two subdirectories will be made below the genome directory, each of which contain C-to-T genome index and G-to-A genome index, respectively.
+Before aligning the reads, we need indices to C-to-T converted genome and G-to-A converted genome to which the reads will be aligned. Please note that genome directory should contain genome sequence files in FastA format with either .fa or .fasta extension. Internally `bismark_genome_preparation` makes C-to-T converted genome and G-to-A converted genome, and calls `bowtie-build` or `bowtie2-build` to create indices. Finally two subdirectories will be made below the `Bisulfite_Genome` directory, each of which contain C-to-T genome index and G-to-A genome index, respectively.
 
 Example commands are as shown below.
 
@@ -52,13 +52,11 @@ gunzip GRCh38_rel90/Homo_sapiens.GRCh38.dna.toplevel.fa.gz
 
 Now you are ready to run `bismark_genome_preparation`.
 
-If you use bowtie1, use the `--bowtie1` option instead of the `--bowtie2` option.
+If you use bowtie1, use the `--bowtie1` option instead of the `--bowtie2` option. (Note that this step takes several hours.)
 
 ```shell
 $BISMARK/bismark_genome_preparation --bowtie2 GRCh38_rel90
 ```
-
-
 
 ### Read alignment
 
@@ -78,6 +76,12 @@ zcat SRR3225631_1.fastq.gz | echo $((`wc -l`/4))  # how many reads are there?
 
 ```shell
 4245886
+```
+
+Now we are ready to run Bismark.
+
+```shell
+$BISMARK/bismark --bowtie2 GRCh38_rel90/ -1 data/SRR3225631/SRR3225631_1.fastq.gz -2 data/SRR3225631/SRR3225631_2.fastq.gz
 ```
 
 ### Methylation information extraction (optional)
