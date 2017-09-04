@@ -27,13 +27,11 @@ Bismark workflow is summarized into three steps as below:
 
 ### Bisulfite converting and indexing of genome
 
-#### Usage
+**Usage**
 
 ```shell
 bismark_genome_preparation [options] <path_to_genome_directory>
 ```
-
--
 
 Before aligning the reads, we need indices to C-to-T converted genome and G-to-A converted genome to which the reads will be aligned. Please note that genome directory should contain genome sequence files in FastA format with either .fa or .fasta extension. Internally `bismark_genome_preparation` makes C-to-T converted genome and G-to-A converted genome, and calls `bowtie-build` or `bowtie2-build` to create indices. Finally two subdirectories will be made below the `Bisulfite_Genome` directory, each of which contain C-to-T genome index and G-to-A genome index, respectively.
 
@@ -44,7 +42,8 @@ First download reference genome of Homo sapiens from ensembl.
 ```shell
 mkdir GRCh38_rel90
 
-wget ftp://ftp.ensembl.org/pub/release-90/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.gz \
+wget \
+ftp://ftp.ensembl.org/pub/release-90/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.gz \
 -P GRCh38_rel90
 ```
 
@@ -64,13 +63,11 @@ $BISMARK/bismark_genome_preparation --bowtie2 GRCh38_rel90
 
 ### Read alignment
 
-####Usage
+**Usage**
 
 ```shell
 bismark [options] <path_to_genome_directory> {-1 <read1> -2 <read2> | <single_read>}
 ```
-
--
 
 Now prepare bisulfite-sequencing reads. We are going to use run [SRR3225633](https://www.ncbi.nlm.nih.gov/sra/SRR3225633/), which is about 4GB, and has 21 million read pairs. The command below downloads the data from ENA.
 
@@ -93,35 +90,45 @@ zcat SRR3225633_1.fastq.gz | echo $((`wc -l`/4))  # how many reads are there?
 Now we are ready to run Bismark.
 
 ```shell
-$BISMARK/bismark --bowtie2 GRCh38_rel90/ -1 data/SRR3225633/SRR3225633_1.fastq.gz -2 data/SRR3225633/SRR3225633_2.fastq.gz
+$BISMARK/bismark --bowtie2 GRCh38_rel90/ -O result/SRR3225633\
+-1 data/SRR3225633/SRR3225633_1.fastq.gz -2 data/SRR3225633/SRR3225633_2.fastq.gz
 ```
 
 If you have enough cores and memories, you can think of using parallel version of Bismark with `--multicore` option.
 
 ```shell
-$BISMARK/bismark --bowtie2 GRCh38_rel90/ --multicore 2 -1 data/SRR3225633/SRR3225633_1.fastq.gz -2 data/SRR3225633/SRR3225633_2.fastq.gz
+$BISMARK/bismark --bowtie2 GRCh38_rel90/ -O result/SRR3225633 --multicore 2\
+-1 data/SRR3225633/SRR3225633_1.fastq.gz -2 data/SRR3225633/SRR3225633_2.fastq.gz
 ```
 
 Running above command gives two outputs.
 
-- `SRR3225631_1_bismark_bt2_pe.bam` : BAM file for alignment results. For paired-end reads, the name of file follows the name of the first fastq file which was specified by `-1` in your command. `bt2` stands for bowtie2, and `pe` stands for paired-end. This can vary based on your aligner and library construction method.
-- `SRR3225631_1_bismark_bt2_PE_report.txt` : Summary file of Bismark run.
+- `SRR3225633_1_bismark_bt2_pe.bam` : BAM file for alignment results. For paired-end reads, the name of file follows the name of the first fastq file which was specified by `-1` in your command. `bt2` stands for bowtie2, and `pe` stands for paired-end. This can vary based on your aligner and library construction method.
+- `SRR3225633_1_bismark_bt2_PE_report.txt` : Summary file of Bismark run.
 
 ### Methylation information extraction (optional)
 
-#### Usage
+**Usage**
 
 ```shell
 bismark_methylation_extractor [options] <filenames>
 ```
 
--
+If you want to extract methylation information from `bam` file generated from `bismark` command, you could use `bismark_methylation_extractor` command.
 
-If you want to analyze methylation status of cytosines 
+Generally it will generate following files:
 
+- `CHG_OB_SRR3225633_1_bismark_bt2_pe.txt`: This file contains information about methylation status of each cytosine which exists within CHG context, and on the original top strand (OT). Since we executed Bismark for directional library, the outputs containing information on complementary to OT (CTOT) and complementary to OB (CTOB) must have been discarded.
+- `SRR3225633_1_bismark_bt2_pe.M-bias.txt`: This file contains information about methylation proportion across each possible position in the read. You can decide whether the methylation proportion is biased or not based on the information.
+- `SRR3225633_1_bismark_pe_splitting_report.txt`: This file is just similar to `SRR3225633_1_bismark_bt2_PE_report.txt`, but it reports fewer analysed C's. Unfortunately, I couldn't figure it out why it does.([Issue #1](https://github.com/dohlee/methylome-tools/issues/1))
 
+## Analysing results
 
+TODO
 
+## Example pipeline script
+
+TODO
 
 ## References
 
