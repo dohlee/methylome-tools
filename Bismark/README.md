@@ -63,11 +63,11 @@ $BISMARK/bismark_genome_preparation --bowtie2 GRCh38_rel90
 bismark [options] <path_to_genome_directory> {-1 <read1> -2 <read2> | <single_read>}
 ```
 
-**Preparing RRBS data**
+**Prepare RRBS data**
 
 See [here](../data/).
 
-Now we are ready to run Bismark.
+**Run Bismark**
 
 ```shell
 $BISMARK/bismark --bowtie2 ../reference_genome/GRCh38_rel90/ -O result/SRR3225633\

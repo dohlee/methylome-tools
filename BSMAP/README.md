@@ -51,11 +51,11 @@ Some must-know options are as follows:
 
 For additional options, see [here](https://sites.google.com/a/brown.edu/bioinformatics-in-biomed/bsmap-for-methylation). 
 
-### Preparing reference sequence data
+### Prepare reference sequence data
 
 See [here](../reference_genome).
 
-### Preparing RRBS data
+### Prepare RRBS data
 
 See [here](../data/).
 
@@ -69,4 +69,18 @@ $BSMAP/bsmap -a ../data/SRR1097456/SRR1097456.fastq.gz \
 -o result/bsmap_output.sam
 -D C-CGG
 ```
+
+## Analysing results
+
+TODO
+
+## Example pipeline script
+
+TODO
+
+## References
+
+- [https://sites.google.com/a/brown.edu/bioinformatics-in-biomed/bsmap-for-methylation](https://sites.google.com/a/brown.edu/bioinformatics-in-biomed/bsmap-for-methylation) 
+  - WARNING: this site is no longer maintained.
+- https://github.com/genome-vendor/bsmap
 
