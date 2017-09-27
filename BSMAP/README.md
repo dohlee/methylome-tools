@@ -70,9 +70,47 @@ $BSMAP/bsmap -a ../data/SRR1097456/SRR1097456.fastq.gz \
 -D C-CGG
 ```
 
+This takes ~30 minutes to complete. The final result looks as below, showing that 84.4% of bisulfite-converted reads were mapped to  reference genome:
+
+```shell
+[bsmap] @Wed Sep 27 16:22:43 2017       total reads: 21513566   total time:  866 secs
+        aligned reads: 18158958 (84.4%), unique reads: 11786493 (54.8%), non-unique reads: 6372465 (29.6%)
+```
+
 ## Analysing results
 
-TODO
+### Extract methylation ratio
+
+BSMAP provides a script `methratio.py` for extracting methylation ratio from BSMAP alignment file. (It requires python 2.X and ~26GB memory. If you have not enough memory for that, you can think of running `methratio.py` for each of the chromosomes separately, and merge the results at last. Also it requires samtools installed.)
+
+**Usage**
+
+```shell
+python $BSMAP/methratio.py [options] BSMAP_alignment_file
+```
+
+Mandatory options are:
+
+- `-o output_file_name`
+- `-d reference_genome_fasta_file`
+
+When you want to run on specific chromosome, use `-c chromosome` option. `chromosome` should be a comma-joined string of chromosome identifiers (e.g. `chr1,chr3,chr4`).
+
+When samtools is not installed in `PATH`, you should specify the path to samtools with `-s samtools_path` option.
+
+**Run methratio.py**
+
+```shell
+python $BSMAP/methratio.py -o result/methylation_ratio.txt \
+-d ../reference_genome/GRCh38_rel90/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.gz \
+result/bsmap_output.sam
+```
+
+> Unfortunately, methratio.py gives an error when certain version of samtools which does not support -X option is used. Also it seems to give an error when reference sequence is gzipped. 
+>
+> TODO : fix bugs in methratio.py
+
+Running above command gives `methylation_ratio.txt`.
 
 ## Example pipeline script
 
@@ -80,6 +118,7 @@ TODO
 
 ## References
 
+- https://code.google.com/archive/p/bsmap/
 - [https://sites.google.com/a/brown.edu/bioinformatics-in-biomed/bsmap-for-methylation](https://sites.google.com/a/brown.edu/bioinformatics-in-biomed/bsmap-for-methylation) 
   - WARNING: this site is no longer maintained.
 - https://github.com/genome-vendor/bsmap
