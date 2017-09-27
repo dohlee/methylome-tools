@@ -37,20 +37,14 @@ Before aligning the reads, we need indices to C-to-T converted genome and G-to-A
 
 Example commands are as shown below.
 
-First download reference genome of Homo sapiens from ensembl.
+**Preparing reference sequence data**
 
-```shell
-mkdir GRCh38_rel90
-
-wget \
-ftp://ftp.ensembl.org/pub/release-90/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.gz \
--P GRCh38_rel90
-```
+See [here](../reference_genome).
 
 Since `bismark_genome_preparation` does not support gzipped fasta files, you should unzip the file. (This might take while.)
 
 ```shell
-gunzip GRCh38_rel90/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+gunzip ../GRCh38_rel90/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 ```
 
 Now you are ready to run `bismark_genome_preparation`.
@@ -69,36 +63,22 @@ $BISMARK/bismark_genome_preparation --bowtie2 GRCh38_rel90
 bismark [options] <path_to_genome_directory> {-1 <read1> -2 <read2> | <single_read>}
 ```
 
-Now prepare bisulfite-sequencing reads. We are going to use run [SRR3225633](https://www.ncbi.nlm.nih.gov/sra/SRR3225633/), which is about 4GB, and has 21 million read pairs. The command below downloads the data from ENA.
+**Preparing RRBS data**
 
-```shell
-mkdir -p data/SRR3225633
-wget -P data/SRR3225633 ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR322/001/SRR3225631/SRR3225633_1.fastq.gz
-wget -P data/SRR3225633 ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR322/001/SRR3225631/SRR3225633_2.fastq.gz
-```
-
-Let's count the reads.
-
-```shell
-zcat SRR3225633_1.fastq.gz | echo $((`wc -l`/4))  # how many reads are there?
-```
-
-```shell
-21267446
-```
+See [here](../data/).
 
 Now we are ready to run Bismark.
 
 ```shell
-$BISMARK/bismark --bowtie2 GRCh38_rel90/ -O result/SRR3225633\
--1 data/SRR3225633/SRR3225633_1.fastq.gz -2 data/SRR3225633/SRR3225633_2.fastq.gz
+$BISMARK/bismark --bowtie2 ../reference_genome/GRCh38_rel90/ -O result/SRR3225633\
+-1 ../data/SRR3225633/SRR3225633_1.fastq.gz -2 ../data/SRR3225633/SRR3225633_2.fastq.gz
 ```
 
 If you have enough cores and memories, you can think of using parallel version of Bismark with `--multicore` option.
 
 ```shell
-$BISMARK/bismark --bowtie2 GRCh38_rel90/ -O result/SRR3225633 --multicore 2\
--1 data/SRR3225633/SRR3225633_1.fastq.gz -2 data/SRR3225633/SRR3225633_2.fastq.gz
+$BISMARK/bismark --bowtie2 ../reference_genome/GRCh38_rel90/ -O result/SRR3225633 --multicore 2\
+-1 ../data/SRR3225633/SRR3225633_1.fastq.gz -2 ../data/SRR3225633/SRR3225633_2.fastq.gz
 ```
 
 Running above command gives two outputs.
