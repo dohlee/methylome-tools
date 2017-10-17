@@ -1,0 +1,16 @@
+# Snakefile for running BSMAP
+configfile: '../config.yaml'
+
+subworkflow reference_genome:
+	workdir: '../reference_genome/'
+	snakefile: '../reference_genome/Snakefile'
+
+subworkflow data:
+	workdir: '../data/'
+	snakefile: '../data/Snakefile'
+
+include: 'rules/run.smk'
+
+rule all:	
+	input:
+		expand('result/{sample}/{sample}_methylation_ratio.txt', sample=config['data']['single-end'])

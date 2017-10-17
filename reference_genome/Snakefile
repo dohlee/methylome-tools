@@ -1,0 +1,8 @@
+# Snakefile for preparing reference genome.
+configfile: "../config.yaml"
+
+include: "rules/prepare.smk"
+
+rule all:
+	input:
+		config['reference']['fasta']
