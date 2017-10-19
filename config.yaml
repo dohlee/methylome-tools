@@ -3,6 +3,7 @@ reference:
     url: "ftp://ftp.ensembl.org/pub/release-90/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.gz"
     gzipped_fasta: "GRCh38_rel90/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.gz"
     fasta: "GRCh38_rel90/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
+    c2t: "GRCh38_rel90/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.bwameth.c2t"
 
 data:
     single-end:
